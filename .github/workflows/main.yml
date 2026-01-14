@@ -46,7 +46,7 @@ jobs:
     - name: Show Github infos
       run: | 
        echo 'Workspace path ${{ github.workspace }} - runner.temp ${{ runner.temp }}'
-       dir ${{ github.workspace }}\NHSE\NHSE.WinForms\bin\Release\net10.0-windows\
+       dir ${{ github.workspace }}\NHSE.WinForms\bin\Release\net10.0-windows\
      
     - name: Create Release
       uses: actions/create-release@latest
@@ -61,7 +61,7 @@ jobs:
 
     ###D:\a\NHSE\NHSE\NHSE.WinForms\bin\Release\net10.0-windows\publish\
     - name: Zipping up Release folder
-      run: 7z a release.zip "${{ github.workspace }}\NHSE\NHSE.WinForms\bin\Release\net10.0-windows\publish\*"
+      run: 7z a release.zip "${{ github.workspace }}\NHSE.WinForms\bin\Release\net10.0-windows\*"
              
     - name: Upload Release
       uses: softprops/action-gh-release@v2
