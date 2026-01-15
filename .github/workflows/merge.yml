@@ -1,42 +1,32 @@
 name: Scheduled Merge Remote Action
-on:
+on: 
   schedule:
-    - cron:  '*/5 * * * *'
-    # scheduled at 07:00 every Monday and Thursday
+    - cron: '* */1 * * *'
+  workflow_dispatch:
+  workflow_call:
+  
+jobs:
+  merge-upstream:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: master             # set the branch to merge to
+          fetch-depth: 0 
+      - name: Merge Upstream
+        uses: exions/merge-upstream@v1
+        with:
+          upstream: kwsch/NHSE      # set the upstream repo
+          upstream-branch: master   # set the upstream branch to merge from
+          branch: master          # set the branch to merge to
+          
+          
+name: Scheduled merge action
+on: 
+  schedule:
+    - cron: '*/5 * * * *'
 
-  workflow_dispatch:  # click the button on Github repo!
-
-
-# jobs:
-  # sync_with_upstream:
-    # runs-on: ubuntu-latest
-    # name: Sync main with upstream latest
-
-    # steps:
-    # # Step 1: run a standard checkout action, provided by github
-    # - name: Checkout main
-      # uses: actions/checkout@v2
-      # with:
-        # ref: main
-        # # submodules: 'recursive'     ### may be needed in your situation
-
-    # # Step 2: run this sync action - specify the upstream repo, upstream branch to sync with, and target sync branch
-    # - name: Pull (Fast-Forward) upstream changes
-      # id: sync
-      # uses: aormsby/Fork-Sync-With-Upstream-action@v2.1
-      # with:
-        # upstream_repository: kwsch/NHSE
-        # upstream_branch: master
-        # target_branch: master
-        # git_pull_args: --ff-only                    # optional arg use, defaults to simple 'pull'
-        # github_token: ${{ secrets.GITHUB_TOKEN }}   # optional, for accessing repos that require authentication
-
-    # # Step 3: Display a message if 'sync' step had new commits (simple test)
-    # - name: Check for new commits
-      # if: steps.sync.outputs.has_new_commits
-      # run: echo "There were new commits."
-      
-      
 jobs:
   merge-from-upstream-repo:
     runs-on: ubuntu-latest
@@ -44,19 +34,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: master
-          fetch-depth: 0 
+          ref: upstream             # set the branch to merge to
+          fetch-depth: 0            # get all changes
       - name: Merge from upstream repo
         uses: discdiver/merge-from-upstream-repo@v0.0.9
         with:
           useremail: ELY3M@github
           username: ELY3M
-          upstream: kwsch/NHSE
-          upstream-branch: master
-          branch: master
-          token: ${{ secrets.TOKEN }}                
-      
-
-    # Step 4: Print a helpful timestamp for your records (not required, just nice)
-    - name: Timestamp
-      run: date
+          upstream: owner/repo      # set the upstream repo
+          upstream-branch: master   # set the upstream branch to merge from
+          branch: upstream          # set the branch to merge to
+          
