@@ -36,6 +36,7 @@ on:
       # if: steps.sync.outputs.has_new_commits
       # run: echo "There were new commits."
       
+      
 jobs:
   merge-from-upstream-repo:
     runs-on: ubuntu-latest
@@ -43,17 +44,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: upstream             # set the branch to merge to
-          fetch-depth: 0            # get all changes
+          ref: master
+          fetch-depth: 0 
       - name: Merge from upstream repo
         uses: discdiver/merge-from-upstream-repo@v0.0.9
         with:
-          elym@gitemail.com                 # set the user email for git commits
-          ELY3M                           # set the user name for git commits
-          upstream: kwsch/NHSE      # set the upstream repo
-          upstream-branch: master   # set the upstream branch to merge from
-          branch: master          # set the branch to merge to
-                
+          useremail: ELY3M@github
+          username: ELY3M
+          upstream: kwsch/NHSE
+          upstream-branch: master
+          branch: master
+          token: ${{ secrets.TOKEN }}                
       
 
     # Step 4: Print a helpful timestamp for your records (not required, just nice)
