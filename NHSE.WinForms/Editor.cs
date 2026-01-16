@@ -3,7 +3,6 @@ using NHSE.Injection;
 using NHSE.Sprites;
 using NHSE.WinForms.Properties;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -293,19 +292,19 @@ public sealed partial class Editor : Form
         var pers = player.Personal;
         TB_Name.Text = pers.PlayerName;
         TB_TownName.Text = pers.TownName;
-        NUD_BankBells.Value = Math.Min(int.MaxValue, pers.Bank.Value);
-        NUD_NookMiles.Value = Math.Min(int.MaxValue, pers.NookMiles.Value);
-        NUD_TotalNookMiles.Value = Math.Min(int.MaxValue, pers.TotalNookMiles.Value);
-        NUD_Wallet.Value = Math.Min(int.MaxValue, pers.Wallet.Value);
+        NUD_BankBells.Value = Math.Min(int.MaxValue, pers.Bank);
+        NUD_NookMiles.Value = Math.Min(int.MaxValue, pers.NookMiles);
+        NUD_TotalNookMiles.Value = Math.Min(int.MaxValue, pers.TotalNookMiles);
+        NUD_Wallet.Value = Math.Min(int.MaxValue, pers.Wallet);
 
         // swapped on purpose -- first count is the first two rows of items
         NUD_PocketCount1.Value = Math.Min(int.MaxValue, pers.PocketCount);
         NUD_PocketCount2.Value = Math.Min(int.MaxValue, pers.BagCount);
         NUD_StorageCount.Value = Math.Min(int.MaxValue, pers.ItemChestCount);
 
-        if (pers.Data30 is { } addition)
+        if (pers.Data30 is { IsInitialized30: true } addition)
         {
-            NUD_HotelTickets.Value = Math.Min(int.MaxValue, addition.HotelTickets.Value);
+            NUD_HotelTickets.Value = Math.Min(int.MaxValue, addition.HotelTickets);
         }
         else
         {
@@ -357,21 +356,10 @@ public sealed partial class Editor : Form
             SAV.ChangeIdentity(orig, updated);
         }
 
-        var bank = pers.Bank;
-        bank.Value = (uint)NUD_BankBells.Value;
-        pers.Bank = bank;
-
-        var nook = pers.NookMiles;
-        nook.Value = (uint)NUD_NookMiles.Value;
-        pers.NookMiles = nook;
-
-        var tnook = pers.TotalNookMiles;
-        tnook.Value = (uint)NUD_TotalNookMiles.Value;
-        pers.TotalNookMiles = tnook;
-
-        var wallet = pers.Wallet;
-        wallet.Value = (uint)NUD_Wallet.Value;
-        pers.Wallet = wallet;
+        pers.Bank = pers.Bank with { Value = (uint)NUD_BankBells.Value };
+        pers.NookMiles = pers.NookMiles with { Value = (uint)NUD_NookMiles.Value };
+        pers.TotalNookMiles = pers.TotalNookMiles with { Value = (uint)NUD_TotalNookMiles.Value };
+        pers.Wallet = pers.Wallet with { Value = (uint)NUD_Wallet.Value };
 
         // swapped on purpose -- first count is the first two rows of items
         pers.PocketCount = (uint)NUD_PocketCount1.Value;
@@ -379,18 +367,14 @@ public sealed partial class Editor : Form
 
         pers.ItemChestCount = (uint)NUD_StorageCount.Value;
 
-        if (player.Personal.Data30 is { } addition)
+        if (player.Personal.Data30 is { IsInitialized30: true } addition)
         {
-            var tickets = addition.HotelTickets;
-            tickets.Value = (uint)NUD_HotelTickets.Value;
-            addition.HotelTickets = tickets;
+            addition.HotelTickets = addition.HotelTickets with { Value = (uint)NUD_HotelTickets.Value };
         }
 
         if (player.WhereAreN is { } x)
         {
-            var poki = x.Poki;
-            poki.Value = (uint)NUD_Poki.Value;
-            x.Poki = poki;
+            x.Poki = x.Poki with { Value = (uint)NUD_Poki.Value };
         }
     }
 
