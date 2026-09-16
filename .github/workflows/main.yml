@@ -41,8 +41,10 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       ###run: msbuild /m /p:Configuration=${{env.BUILD_CONFIGURATION}} ${{env.SOLUTION_FILE_PATH}} /t:Publish
       ##run: dotnet build . -c Release -p:EnableWindowsTargeting=truendows Executable
-      run: dotnet build . -c Release -p:EnableWindowsTargeting=true -r win-x64 -p:ImportByWildcardBeforeSolution=false -o ./build
-     
+      run: | 
+        dotnet build . -c Release -p:EnableWindowsTargeting=true -r win-x64 -p:ImportByWildcardBeforeSolution=false -o ./build
+        dotnet publish ${{ github.workspace }}/NHSE.WinForms/NHSE.WinForms.csproj -c Release -p:EnableWindowsTargeting=true -r win-x64 --self-contained true -p:PublishSingleFile=true -p:ImportByWildcardBeforeSolution=false -o ./publish 
+        
     - name: Create Release
       uses: actions/create-release@latest
       env:
@@ -58,7 +60,7 @@ jobs:
     ###zip -r ${{ github.workspace }}/linux-release.zip .
     - name: Zipping up Release folder
       run: | 
-        cd ${{ github.workspace }}/build
+        cd ${{ github.workspace }}/publish
         zip -r ${{ github.workspace }}/NHSE.zip .
              
     - name: Upload Release
