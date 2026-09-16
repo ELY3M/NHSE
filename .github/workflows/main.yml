@@ -59,8 +59,11 @@ jobs:
         body: ${{ github.event.head_commit.message }}
 
     ###D:\a\NHSE\NHSE\NHSE.WinForms\bin\Release\net10.0-windows\publish\
+    ###zip -r ${{ github.workspace }}/linux-release.zip .
     - name: Zipping up Release folder
-      run: zip -r NHSE.zip . -i "${{ github.workspace }}/NHSE.WinForms/bin/Release/net10.0-windows/*"
+      run: | 
+        cd ${{ github.workspace }}/NHSE.WinForms/bin/Release/net10.0-windows/  
+        zip -r ${{ github.workspace }}/NHSE.zip .
              
     - name: Upload Release
       uses: softprops/action-gh-release@v2
